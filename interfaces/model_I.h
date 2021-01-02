@@ -1,7 +1,6 @@
 #ifndef MODEL_I_H
 #define MODEL_I_H
 
-#include <cstring>
 #include <vector>
 
 template <class data>
