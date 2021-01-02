@@ -3,23 +3,17 @@
 
 #include <cstring>
 #include <iostream>
+#include <stdarg.h>
 
 typedef unsigned char uint8_t;
 typedef bool spin;
 
 struct Memory{
-Memory(){
-    fData = new spin[fSize];
-}
-
-Memory(const Memory &source){
-    fData = new spin[fSize];
-    std::memcpy(this->fData, source.fData, source.fSize);
-}
-
-~Memory(){
-    delete fData;
-}
+    
+Memory();
+Memory(int size, ...);
+Memory(const Memory &source);
+~Memory();
 
 int8_t operator()(uint8_t idx){return fData[idx]?1:-1;};
 uint8_t size(){return fSize;};
