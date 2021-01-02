@@ -48,6 +48,7 @@ void Model::load_memories(std::vector<Memory> e)
         }
     }
 
+    fState = kTrained;
     //w_ij = 1/N sum_mu e_i e_j
 }
 
@@ -64,15 +65,16 @@ void Model::train()
 
         fNeurons[i] = h > 0.;
     }
-
-    fState = kTrained;
     //h_i = sum_j w_ij S_j
     //S_i=sgn(h_i)
 }
 
 void Model::predict(Memory img)
 {
-    if (fState < kTrained) train();
+    if (fState < kTrained) {
+        std::cerr<<"Please load_memories before predicting"<<std::endl;
+        return;
+    }
 
     cout << "Predicting" << endl;
     //set neurons
