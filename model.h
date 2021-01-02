@@ -19,20 +19,9 @@ enum states{
 class Model
 {
 public:
-    Model(uint8_t P, uint8_t N) : fP(P), fN(N)
-    {
-        fState = kUninit;
-        cout<< "Creating model" << endl;
-        fNeurons = new bool[fN];
-        fWeights = new float[fN * fN];
-    };
+    Model(uint8_t P, uint8_t N);
 
-    ~Model()
-    {
-        cout << "Destroying model" << endl;
-        delete fNeurons;
-        delete fWeights;
-    };
+    ~Model();
 
     friend std::ostream &operator<<(std::ostream &out, Model &m);
 
@@ -47,7 +36,7 @@ private:
     states fState;
     uint8_t fP;
     uint8_t fN;
-    bool *fNeurons;
+    spin *fNeurons;
     float *fWeights;
 };
 

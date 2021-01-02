@@ -1,9 +1,25 @@
 #include "model.h"
 
-void Model::init(){
+Model::Model(uint8_t P, uint8_t N) : fP(P), fN(N)
+{
+    fState = kUninit;
+    cout << "Creating model" << endl;
+    fNeurons = new spin[fN];
+    fWeights = new float[fN * fN];
+};
+
+Model::~Model()
+{
+    cout << "Destroying model" << endl;
+    delete fNeurons;
+    delete fWeights;
+};
+
+void Model::init()
+{
     for (uint8_t i = 0; i < fN; i++)
     {
-        fNeurons[i]=1;
+        fNeurons[i] = 1;
         for (uint8_t j = 0; j < fN; j++)
         {
             fWeights[i * fN + j] = 0;
@@ -14,25 +30,21 @@ void Model::init(){
 
 void Model::load_memories(std::vector<Memory> e)
 {
-    if(fState<states::kInit){
-        init();
-    }
+    if (fState < kInit) init();
+    
 
     cout << "Loading memories" << endl;
-    for (auto memory : e)
+    for (uint8_t i = 0; i < fN; i++)
     {
-        for (uint8_t i = 0; i < fN; i++)
+        for (uint8_t j = 0; j < fN; j++)
         {
-            for (uint8_t j = 0; j < fN; j++)
+            auto psum = 0.;
+            for (auto memory : e)
             {
-                auto psum = 0.;
-                for (uint8_t p = 0; p < fP; p++)
-                {
-                    psum += memory(i) * memory(j);
-                }
-
-                fWeights[i * fN + j] += 1. / fN * psum;
+                psum += memory(i) * memory(j);
             }
+
+            fWeights[i * fN + j] += 1. / fN * psum;
         }
     }
 
@@ -47,23 +59,20 @@ void Model::train()
         auto h = 0.;
         for (uint8_t j = 0; j < fN; j++)
         {
-            h += fWeights[i * fN + j] * (fNeurons[j]?1:-1);
+            h += fWeights[i * fN + j] * (fNeurons[j] ? 1 : -1);
         }
 
         fNeurons[i] = h > 0.;
     }
 
-    fState=kTrained;
+    fState = kTrained;
     //h_i = sum_j w_ij S_j
     //S_i=sgn(h_i)
 }
 
 void Model::predict(Memory img)
 {
-    if (fState < states::kTrained)
-    {
-        train();
-    }
+    if (fState < kTrained) train();
 
     cout << "Predicting" << endl;
     //set neurons
@@ -72,7 +81,7 @@ void Model::predict(Memory img)
     std::memcpy(img.fData, fNeurons, fN);
 }
 
-void Model::reconstruct(Memory& img)
+void Model::reconstruct(Memory &img)
 {
     cout << "Reconstructing" << endl;
     //set neurons
@@ -83,7 +92,7 @@ void Model::reconstruct(Memory& img)
 std::ostream &operator<<(std::ostream &out, Model &m)
 {
     out << "*********** Model ***********" << endl;
-    out<<"***** Weights *****"<<endl;
+    out << "***** Weights *****" << endl;
     for (uint8_t i = 0; i < m.fN; i++)
     {
         for (uint8_t j = 0; j < m.fN; j++)

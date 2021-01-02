@@ -4,24 +4,14 @@
 using namespace std;
 
 int main(){
-    bool memory[] = {0, 0, 1, 0, 0};
-    Memory m;
-    std::memmove(m.fData, memory, m.size());
-    cout<<m<<endl;
-
-    bool memory_1[] = {1, 1, 1, 0, 0};
-    Memory m_1;
-    std::memmove(m_1.fData, memory_1, m_1.size());
-
     std::vector<Memory> training_dataset;
-    training_dataset.push_back(m);
-    training_dataset.push_back(m_1);
+    training_dataset.emplace_back(Memory(5, 0, 0, 1, 0, 0));
+    training_dataset.emplace_back(Memory(5, 1, 1, 1, 0, 0));
 
-    auto model = Model(training_dataset.size(), m.size());
+    auto model = Model(training_dataset.size(), training_dataset[0].size());
     model.load_memories(training_dataset);
-    model.train();
 
-    bool corrupted_data[] = {1, 1, 0, 0, 0};
+    bool corrupted_data[] = {1, 1, 1, 1, 0};
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size());
 
@@ -31,7 +21,7 @@ int main(){
     for(uint8_t i=0;i<corrupted_memory.size();i++){
         cout << corrupted_memory.fData[i]<<" ";
     }
-    cout<<endl;
+    cout<<endl<<endl;
 
     cout<<model;
 
