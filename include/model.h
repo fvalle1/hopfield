@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 
+#include "model_I.h"
 #include "memory.h"
 
 using std::cout;
@@ -16,7 +17,7 @@ enum states{
     kTrained
 };
 
-class Model
+class Model : public Model_I<Memory>
 {
 public:
     Model(uint8_t P, uint8_t N);
