@@ -1,6 +1,8 @@
 #include "model.h"
 
-Model::Model(uint8_t P, uint8_t N) : fP(P), fN(N)
+std::mutex Model::fLoading_mutex;
+
+Model::Model(uint8_t P, uint8_t N, size_t num_threads) : fP(P), fN(N), fNumThreads(num_threads)
 {
     fState = kUninit;
     cout << "Creating model" << endl;
@@ -28,24 +30,46 @@ void Model::init()
     fState = kInit;
 }
 
-void Model::load_memories(std::vector<Memory> e)
+void Model::set_weight(const size_t id, const size_t step, const uint8_t N, const std::vector<Memory> &e, float *weights)
 {
-    if (fState < kInit) init();
-    
+    auto start = id * step;
+    auto end = (id + 1) * step;
 
-    cout << "Loading memories" << endl;
-    for (uint8_t i = 0; i < fN; i++)
+    for (uint8_t i = start; i < end; i++)
     {
-        for (uint8_t j = 0; j < fN; j++)
+        for (uint8_t j = 0; j < N; j++)
         {
             auto psum = 0.;
             for (auto memory : e)
             {
                 psum += memory(i) * memory(j);
             }
-
-            fWeights[i * fN + j] += 1. / fN * psum;
+            {
+                std::lock_guard<std::mutex> guard(fLoading_mutex);
+                weights[i * N + j] += 1. / N * psum;
+            }
         }
+    }
+}
+
+void Model::load_memories(std::vector<Memory> e)
+{
+    if (fState < kInit)
+        init();
+
+    cout << "Loading memories" << endl;
+
+    using std::thread;
+    thread workers[fNumThreads];
+    uint8_t step = fN / fNumThreads;
+    for (size_t t = 0; t < fNumThreads; t++)
+    {
+        workers[t] = thread(set_weight, t, std::ref(step), std::ref(fN), std::ref(e), std::ref(fWeights));
+    }
+
+    for (size_t t = 0; t < fNumThreads; t++)
+    {
+        workers[t].join();
     }
 
     fState = kTrained;
@@ -69,17 +93,57 @@ void Model::train()
     //S_i=sgn(h_i)
 }
 
+void Model::sum_neurons(const size_t id, const uint8_t step, const uint8_t N, const float *weight, spin *neurons)
+{
+
+    auto start = id * step;
+    auto end = (id + 1) * step;
+
+    for (uint8_t i = start; i < end; i++)
+    {
+        auto h = 0.;
+        for (uint8_t j = 0; j < N; j++)
+        {
+            h += weight[i * N + j] * (neurons[j] ? 1 : -1);
+        }
+
+        neurons[i] = h > 0.;
+    }
+}
+
+void Model::train(size_t num_threads)
+{
+    cout << "Training model" << endl;
+
+    using std::thread;
+    thread workers[num_threads];
+    uint8_t step = fN / num_threads;
+    for (size_t t = 0; t < num_threads; t++)
+    {
+        workers[t] = thread(Model::sum_neurons, t, std::ref(step), std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
+    }
+
+    for (size_t t = 0; t < num_threads; t++)
+    {
+        workers[t].join();
+    }
+
+    //h_i = sum_j w_ij S_j
+    //S_i=sgn(h_i)
+}
+
 void Model::predict(Memory img)
 {
-    if (fState < kTrained) {
-        std::cerr<<"Please load_memories before predicting"<<std::endl;
+    if (fState < kTrained)
+    {
+        std::cerr << "Please load_memories before predicting" << std::endl;
         return;
     }
 
     cout << "Predicting" << endl;
     //set neurons
     std::memcpy(fNeurons, img.fData, img.size());
-    train();
+    train(fNumThreads);
     std::memcpy(img.fData, fNeurons, fN);
 }
 
