@@ -11,7 +11,7 @@ int main(){
     auto model = Model(training_dataset.size(), training_dataset[0].size());
     model.load_memories(training_dataset);
 
-    bool corrupted_data[] = {1, 1, 1, 1, 0};
+    spin corrupted_data[] = {1, 1, 1, 1, 0};
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
