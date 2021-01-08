@@ -1,5 +1,7 @@
 #include "memory.h"
 
+uint8_t Memory::fSize = 6;
+
 Memory::Memory()
 {
     fData = new spin[fSize];

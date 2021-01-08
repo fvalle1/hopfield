@@ -23,10 +23,12 @@ inline uint8_t size(){return fSize;};
 inline uint8_t size_of() { return fSize * sizeof(spin); };
 friend std::ostream& operator<<(std::ostream& out, Memory& m);
 
+inline static void SetSize(uint8_t size) { fSize = size; };
+
 spin *fData;
 
 private:
-    static constexpr uint8_t fSize = 6;
+    static uint8_t fSize;
 };
 
 #endif
