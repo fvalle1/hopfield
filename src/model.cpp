@@ -42,7 +42,7 @@ void Model::set_weight(const size_t id, const size_t step, const uint8_t N, cons
             auto psum = 0.;
             for (auto memory : e)
             {
-                psum += memory(i) * memory(j);
+                psum += memory[i] * memory[j];
             }
             {
                 std::lock_guard<std::mutex> guard(fLoading_mutex);

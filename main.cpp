@@ -13,7 +13,7 @@ int main(){
 
     bool corrupted_data[] = {1, 1, 1, 1, 0};
     Memory corrupted_memory;
-    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size());
+    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
     model.reconstruct(corrupted_memory);
 

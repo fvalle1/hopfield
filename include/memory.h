@@ -18,8 +18,9 @@ Memory(int size, ...);
 Memory(const Memory &source);
 ~Memory();
 
-inline int8_t operator()(uint8_t idx){return fData[idx]?1:-1;};
+inline int8_t operator[](uint8_t idx){return fData[idx]?1:-1;};
 inline uint8_t size(){return fSize;};
+inline uint8_t size_of() { return fSize * sizeof(spin); };
 friend std::ostream& operator<<(std::ostream& out, Memory& m);
 
 spin *fData;
