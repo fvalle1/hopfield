@@ -10,11 +10,12 @@ Memory::Memory()
 Memory::Memory(const Memory &source)
 {
     fData = new spin[fSize];
-    std::memcpy(this->fData, source.fData, source.fSize);
+    std::memcpy(this->fData, source.fData, source.fSize*sizeof(spin));
 }
 
 Memory::Memory(int size, ...)
 {
+    assert(size==fSize);
     va_list ap;
     va_start(ap, size);
     fData = new spin[fSize];
