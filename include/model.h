@@ -37,9 +37,9 @@ public:
 
 private:
     void init();
-    static void sum_neurons(const size_t, const uint8_t, const uint8_t, const float *, spin *);
-    static void set_weight(const size_t id, const size_t step, const uint8_t N, const std::vector<Memory> &e, float *weights);
-    
+    static void sum_neurons(const uint8_t , const uint8_t , const uint8_t, const float *, spin *);
+    static void set_weights(const uint8_t start, const uint8_t end, const uint8_t N, const std::vector<Memory> &e, float *weights);
+
     states fState;
     uint8_t fP;
     uint8_t fN;

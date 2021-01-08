@@ -26,7 +26,7 @@ friend std::ostream& operator<<(std::ostream& out, Memory& m);
 spin *fData;
 
 private:
-    static constexpr uint8_t fSize = 5;
+    static constexpr uint8_t fSize = 6;
 };
 
 #endif
