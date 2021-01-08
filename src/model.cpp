@@ -34,6 +34,7 @@ void Model::set_weight(const size_t id, const size_t step, const uint8_t N, cons
 {
     auto start = id * step;
     auto end = (id + 1) * step;
+    if((N%2!=0) & ((N-end)==1)) end = N;
 
     for (uint8_t i = start; i < end; i++)
     {
@@ -98,6 +99,7 @@ void Model::sum_neurons(const size_t id, const uint8_t step, const uint8_t N, co
 
     auto start = id * step;
     auto end = (id + 1) * step;
+    if((N%2!=0) & ((N-end)==1)) end = N;
 
     for (uint8_t i = start; i < end; i++)
     {

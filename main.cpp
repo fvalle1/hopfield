@@ -7,11 +7,12 @@ int main(){
     std::vector<Memory> training_dataset;
     training_dataset.emplace_back(Memory(5, 0, 0, 1, 0, 0));
     training_dataset.emplace_back(Memory(5, 1, 1, 1, 0, 0));
+    
 
     auto model = Model(training_dataset.size(), training_dataset[0].size());
     model.load_memories(training_dataset);
 
-    spin corrupted_data[] = {1, 1, 1, 1, 0};
+    spin corrupted_data[] = {1, 1, 1, 1, 1};
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
