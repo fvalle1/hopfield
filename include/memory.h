@@ -4,6 +4,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdarg.h>
+#include <cassert>
 
 #include "memory_I.h"
 
