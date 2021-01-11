@@ -9,6 +9,8 @@
 
 #include "model_I.h"
 #include "memory.h"
+#include "matrix_helper.h"
+
 
 using std::cout;
 using std::endl;
@@ -32,6 +34,7 @@ public:
     void load_memories(std::vector<Memory>);
     void train();
     void train(size_t num_threads);
+    void trainGPU();
     void predict(Memory);
     void reconstruct(Memory &);
 

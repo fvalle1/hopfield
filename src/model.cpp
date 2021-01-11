@@ -134,6 +134,23 @@ void Model::train(size_t num_threads)
     //S_i=sgn(h_i)
 }
 
+void Model::trainGPU()
+{
+    cout << "Training model on GPU" << endl;
+
+    float h[fN];
+
+    multiply_matrix_vector(fWeights, fNeurons, h, this->fN, this->fN);
+
+    for (uint8_t i = 0; i < fN; i++)
+    {
+        fNeurons[i] = h[i] > 0.;
+    }
+
+    //h_i = sum_j w_ij S_j
+    //S_i=sgn(h_i)
+}
+
 void Model::predict(Memory img)
 {
     if (fState < kTrained)
