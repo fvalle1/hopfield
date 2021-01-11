@@ -8,6 +8,7 @@
 #include <cmath>
 #include <numeric>
 #include <cstring>
+#include <exception>
 
 #include "mtlpp.hpp"
 

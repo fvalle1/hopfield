@@ -10,13 +10,17 @@ void multiply_matrix_vector(void *matrix, void *vector, void *result, const uint
     auto devices = mtlpp::Device::CopyAllDevices();
     //mtlpp::Device device = mtlpp::Device::CreateSystemDefaultDevice();
     std::cout << "I found " << sizeof(devices) / sizeof(devices[0]) << " devices" << endl;
-    for (uint8_t idev = 0; idev < devices.GetSize(); idev++)
-    {
-        auto dev = devices[idev];
-        cout << dev.GetName().GetCStr() << endl;
-        cout << "It is " << (dev.IsLowPower() ? "" : " not ") << "low power" << endl;
-        cout << "It is " << (dev.IsRemovable() ? "" : " not ") << "removable" << endl;
-        cout << "It has " << (dev.HasUnifiedMemory() ? "" : " not ") << "unified memory" << endl;
+    try{
+        for (uint8_t idev = 0; idev < devices.GetSize(); idev++)
+        {
+            auto dev = devices[idev];
+            cout << dev.GetName().GetCStr() << endl;
+            cout << "It is " << (dev.IsLowPower() ? "" : " not ") << "low power" << endl;
+            cout << "It is " << (dev.IsRemovable() ? "" : " not ") << "removable" << endl;
+            cout << "It has " << (dev.HasUnifiedMemory() ? "" : " not ") << "unified memory" << endl;
+        }
+    }catch(std::exception e){
+        std::cerr<<e.what()<<endl;
     }
 
     auto device = devices[0];
@@ -103,13 +107,20 @@ void multiply_matrix_matrix(void *matrix_first, void *matrix_second, void *resul
     auto devices = mtlpp::Device::CopyAllDevices();
     //mtlpp::Device device = mtlpp::Device::CreateSystemDefaultDevice();
     std::cout << "I found " << sizeof(devices) / sizeof(devices[0]) << " devices" << endl;
-    for (uint8_t idev = 0; idev < devices.GetSize(); idev++)
+    try
     {
-        auto dev = devices[idev];
-        cout << dev.GetName().GetCStr() << endl;
-        cout << "It is " << (dev.IsLowPower() ? "" : " not ") << "low power" << endl;
-        cout << "It is " << (dev.IsRemovable() ? "" : " not ") << "removable" << endl;
-        cout << "It has " << (dev.HasUnifiedMemory() ? "" : " not ") << "unified memory" << endl;
+        for (uint8_t idev = 0; idev < devices.GetSize(); idev++)
+        {
+            auto dev = devices[idev];
+            cout << dev.GetName().GetCStr() << endl;
+            cout << "It is " << (dev.IsLowPower() ? "" : " not ") << "low power" << endl;
+            cout << "It is " << (dev.IsRemovable() ? "" : " not ") << "removable" << endl;
+            cout << "It has " << (dev.HasUnifiedMemory() ? "" : " not ") << "unified memory" << endl;
+        }
+    }
+    catch (std::exception e)
+    {
+        std::cerr << e.what() << endl;
     }
 
     auto device = devices[0];
