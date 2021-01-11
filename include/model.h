@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <thread>
+#include <mutex>
 
 #include "model_I.h"
 #include "memory.h"
