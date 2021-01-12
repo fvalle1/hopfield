@@ -190,7 +190,7 @@ void Model::predict(Memory img)
     //set neurons
     std::memcpy(fNeurons, img.fData, img.size());
     train();
-    std::memcpy(img.fData, fNeurons, fN);
+    std::memcpy(img.fData, fNeurons, fN * sizeof(uint8_t));
 }
 
 void Model::reconstruct(Memory &img)
@@ -198,7 +198,7 @@ void Model::reconstruct(Memory &img)
     cout << "Reconstructing" << endl;
     //set neurons
     predict(img);
-    std::memcpy(img.fData, fNeurons, fN);
+    std::memcpy(img.fData, fNeurons, fN * sizeof(uint8_t));
 }
 
 std::ostream &operator<<(std::ostream &out, Model &m)
