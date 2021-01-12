@@ -42,10 +42,21 @@ Memory::~Memory(){
 
 std::ostream& operator<<(std::ostream &out, Memory &m)
 {
-    for (uint8_t i = 0; i < m.fSize; i++)
+    return Memory::PrintMe<std::ostream>(out, m, ' ');
+}
+
+std::ofstream &operator<<(std::ofstream &out, Memory &m)
+{
+    return Memory::PrintMe<std::ofstream>(out, m, ',');
+}
+
+template<typename Streamer>
+Streamer& Memory::PrintMe(Streamer& out, Memory &m, char sep){
+    uint8_t i = 0;
+    for (; i < m.fSize - 1; i++)
     {
-        out<<(static_cast<int>(m[i])>0?1:0)<<" ";
+        out << (static_cast<int>(m[i]) > 0 ? 1 : 0) << sep;
     }
-    out<<std::endl;
+    out << (static_cast<int>(m[i]) > 0 ? 1 : 0);
     return out;
 }

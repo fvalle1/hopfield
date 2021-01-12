@@ -2,12 +2,15 @@
 
 std::mutex Model::fLoading_mutex;
 
-Model::Model(uint8_t P, uint8_t N, size_t num_threads) : fP(P), fN(N), fNumThreads(num_threads)
+Model::Model(uint8_t P, uint8_t N, size_t num_threads, devices device) : fP(P),
+                                                                         fN(N),
+                                                                         fNumThreads(num_threads),
+                                                                         fDevice(device)
 {
     fState = kUninit;
     cout << "Creating model" << endl;
-    cout << "with " << (unsigned int)fN <<" neurons"<<endl;
-    cout << "and " << (unsigned int) fP << " memories" << endl;
+    cout << "with " << (unsigned int)fN << " neurons" << endl;
+    cout << "and " << (unsigned int)fP << " memories" << endl;
     fNeurons = new spin[fN];
     fWeights = new float[fN * fN];
 };
@@ -63,22 +66,46 @@ void Model::load_memories(std::vector<Memory> e)
     uint8_t step = fN / fNumThreads;
     {
         size_t t = 0;
-         for (; t < fNumThreads-1; t++)
+        for (; t < fNumThreads - 1; t++)
         {
-            workers[t] = thread(Model::set_weights, t*step, (t+1)*step, std::ref(fN), std::ref(e), std::ref(fWeights));
+            workers[t] = thread(Model::set_weights, t * step, (t + 1) * step, std::ref(fN), std::ref(e), std::ref(fWeights));
         }
         workers[t] = thread(Model::set_weights, t * step, fN, std::ref(fN), std::ref(e), std::ref(fWeights));
     }
-        for (size_t t = 0; t < fNumThreads; t++)
-        {
-            workers[t].join();
-        }
-
-        fState = kTrained;
-        //w_ij = 1/N sum_mu e_i e_j
+    for (size_t t = 0; t < fNumThreads; t++)
+    {
+        workers[t].join();
     }
 
-void Model::train()
+    fState = kTrained;
+    //w_ij = 1/N sum_mu e_i e_j
+}
+
+void Model::train(devices device)
+{
+    if (device != kNull)
+        fDevice = device;
+
+    switch (fDevice)
+    {
+    case kNull:
+        trainCPU();
+        break;
+    case kCPU:
+        trainCPU();
+        break;
+    case kMultiThread:
+        train(4);
+        break;
+    case kGPU:
+        trainGPU();
+        break;
+    default:
+        break;
+    }
+}
+
+void Model::trainCPU()
 {
     cout << "Training model" << endl;
     for (uint8_t i = 0; i < fN; i++)
@@ -119,11 +146,11 @@ void Model::train(size_t num_threads)
     uint8_t step = fN / num_threads;
     {
         size_t t = 0;
-         for (; t < num_threads-1; t++)
+        for (; t < num_threads - 1; t++)
         {
-            workers[t] = thread(Model::sum_neurons, t*step, (t+1)*step, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
+            workers[t] = thread(Model::sum_neurons, t * step, (t + 1) * step, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
         }
-        workers[t] = thread(Model::sum_neurons, t*step, fN, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
+        workers[t] = thread(Model::sum_neurons, t * step, fN, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
     }
     for (size_t t = 0; t < num_threads; t++)
     {
