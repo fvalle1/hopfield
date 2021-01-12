@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdarg.h>
 #include <cassert>
+#include <vector>
 
 #include "memory_I.h"
 
@@ -16,6 +17,7 @@ struct Memory : public Memory_I<uint8_t,int8_t>
     
 Memory();
 Memory(int size, ...);
+Memory(std::vector<int> data);
 Memory(const Memory &source);
 ~Memory();
 

@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "memory.h"
-#include "memory.h"
+#include "reader.h"
 
 using namespace std;
 
@@ -180,4 +180,35 @@ void test_6()
          << endl;
 
     cout << model;
+}
+
+void test_7(){
+    auto reader = new Reader("test.csv");
+    auto training_dataset = vector<Memory>();
+    Memory::SetSize(3);
+    reader->read(training_dataset);
+
+    auto model = Model(training_dataset.size(), training_dataset[0].size());
+    model.load_memories(training_dataset);
+
+    spin corrupted_data[] = {1, 0, 1};
+    Memory corrupted_memory;
+    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
+
+    model.trainGPU();
+    model.reconstruct(corrupted_memory);
+
+    cout << "Reconstructed: " << endl;
+    for (uint8_t i = 0; i < corrupted_memory.size(); i++)
+    {
+        cout << corrupted_memory.fData[i] << " ";
+    }
+    cout << endl
+         << endl;
+
+    cout << model;
+
+    training_dataset.clear();
+
+    delete reader;
 }
