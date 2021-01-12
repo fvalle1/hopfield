@@ -95,7 +95,7 @@ void Model::train(devices device)
         trainCPU();
         break;
     case kMultiThread:
-        train(4);
+        train(fNumThreads);
         break;
     case kGPU:
         trainGPU();
@@ -189,7 +189,7 @@ void Model::predict(Memory img)
     cout << "Predicting" << endl;
     //set neurons
     std::memcpy(fNeurons, img.fData, img.size());
-    train(fNumThreads);
+    train();
     std::memcpy(img.fData, fNeurons, fN);
 }
 
