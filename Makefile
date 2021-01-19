@@ -15,10 +15,10 @@ all: hopfield.out
 hopfield.out: main.cpp $(TARGETS) $(APPLE_TARGETS) $(LIBS)
 	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) $(LINKER_FLAGS) $^ -o $@
 
-all_nogpu: hopfield_nometal.out
+all_nometal: hopfield_nometal.out
 
 hopfield_nometal.out: main.cpp $(TARGETS) $(LIBS)
-	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) $^ -o $@
+	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) $^ -o $@ -lpthread
 
 %.o: src/%.cpp include/%.h
 	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) -c $< -o $@

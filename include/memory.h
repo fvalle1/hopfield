@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <cassert>
 #include <vector>
+#include <algorithm>
 
 #include "memory_I.h"
 
