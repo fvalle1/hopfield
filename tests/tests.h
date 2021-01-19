@@ -2,7 +2,8 @@
 #include <vector>
 
 #include "memory.h"
-#include "memory.h"
+#include "reader.h"
+#include "writer.h"
 
 using namespace std;
 
@@ -168,7 +169,7 @@ void test_6()
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
-    model.trainGPU();
+    model.train(kMultiThread);
     model.reconstruct(corrupted_memory);
 
     cout << "Reconstructed: " << endl;
@@ -180,4 +181,98 @@ void test_6()
          << endl;
 
     cout << model;
+}
+
+void test_7()
+{
+    std::vector<Memory> training_dataset;
+    training_dataset.reserve(100);
+    Memory::SetSize(10);
+    for (size_t i = 0; i < 100; i++)
+    {
+        training_dataset.emplace_back(Memory(10, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1));
+    }
+
+    auto model = Model(training_dataset.size(), training_dataset[0].size());
+    model.load_memories(training_dataset);
+
+    spin corrupted_data[] = {1, 1, 1, 0, 1, 1, 0, 1, 1, 1};
+    Memory corrupted_memory;
+    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
+
+    model.train(kGPU);
+    model.reconstruct(corrupted_memory);
+
+    cout << "Reconstructed: " << endl;
+    for (uint8_t i = 0; i < corrupted_memory.size(); i++)
+    {
+        cout << corrupted_memory.fData[i] << " ";
+    }
+    cout << endl
+         << endl;
+
+    cout << model;
+}
+
+void test_8(){
+    auto reader = new Reader("test.csv");
+    auto training_dataset = vector<Memory>();
+    Memory::SetSize(3);
+    reader->read(training_dataset);
+
+    auto model = Model(training_dataset.size(), training_dataset[0].size());
+    model.load_memories(training_dataset);
+
+    spin corrupted_data[] = {1, 0, 1};
+    Memory corrupted_memory;
+    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
+
+    model.train(kGPU);
+    model.reconstruct(corrupted_memory);
+
+    cout << "Reconstructed: " << endl;
+    for (uint8_t i = 0; i < corrupted_memory.size(); i++)
+    {
+        cout << corrupted_memory.fData[i] << " ";
+    }
+    cout << endl
+         << endl;
+
+    cout << model;
+
+    training_dataset.clear();
+
+    delete reader;
+}
+
+void test_9()
+{
+    auto reader = new Reader("test.csv");
+    auto writer = new Writer("test_out.csv");
+    auto training_dataset = vector<Memory>();
+    Memory::SetSize(3);
+    reader->read(training_dataset);
+
+    auto model = Model(training_dataset.size(), training_dataset[0].size());
+    model.load_memories(training_dataset);
+
+    spin corrupted_data[] = {1, 0, 1};
+    Memory corrupted_memory;
+    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
+
+    model.train(kGPU);
+    model.reconstruct(corrupted_memory);
+    auto out = std::vector<Memory>();
+    out.push_back(corrupted_memory);
+
+    writer->write(out);
+    cout << endl
+         << endl;
+
+    cout << model;
+
+    training_dataset.clear();
+
+    delete reader;
+    delete writer;
 }

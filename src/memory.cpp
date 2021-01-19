@@ -26,16 +26,37 @@ Memory::Memory(int size, ...)
     va_end(ap);
 }
 
+Memory::Memory(std::vector<int> data)
+{
+    assert(data.size() == fSize);
+    fData = new spin[fSize];
+    uint8_t i = 0;
+    std::for_each(data.begin(), data.end(), [this, &i](auto&& point) {
+        this->fData[i++] = point > 0;
+    });
+}
+
 Memory::~Memory(){
     delete fData;
 }
 
 std::ostream& operator<<(std::ostream &out, Memory &m)
 {
-    for (uint8_t i = 0; i < m.fSize; i++)
+    return Memory::PrintMe<std::ostream>(out, m, ' ');
+}
+
+std::ofstream &operator<<(std::ofstream &out, Memory &m)
+{
+    return Memory::PrintMe<std::ofstream>(out, m, ',');
+}
+
+template<typename Streamer>
+Streamer& Memory::PrintMe(Streamer& out, Memory &m, char sep){
+    uint8_t i = 0;
+    for (; i < m.fSize - 1; i++)
     {
-        out<<(static_cast<int>(m[i])>0?1:0)<<" ";
+        out << (static_cast<int>(m[i]) > 0 ? 1 : 0) << sep;
     }
-    out<<std::endl;
+    out << (static_cast<int>(m[i]) > 0 ? 1 : 0);
     return out;
 }

@@ -2,12 +2,15 @@
 
 std::mutex Model::fLoading_mutex;
 
-Model::Model(uint8_t P, uint8_t N, size_t num_threads) : fP(P), fN(N), fNumThreads(num_threads)
+Model::Model(uint8_t P, uint8_t N, size_t num_threads, devices device) : fP(P),
+                                                                         fN(N),
+                                                                         fNumThreads(num_threads),
+                                                                         fDevice(device)
 {
     fState = kUninit;
     cout << "Creating model" << endl;
-    cout << "with " << (unsigned int)fN <<" neurons"<<endl;
-    cout << "and " << (unsigned int) fP << " memories" << endl;
+    cout << "with " << (unsigned int)fN << " neurons" << endl;
+    cout << "and " << (unsigned int)fP << " memories" << endl;
     fNeurons = new spin[fN];
     fWeights = new float[fN * fN];
 };
@@ -63,22 +66,50 @@ void Model::load_memories(std::vector<Memory> e)
     uint8_t step = fN / fNumThreads;
     {
         size_t t = 0;
-         for (; t < fNumThreads-1; t++)
+        for (; t < fNumThreads - 1; t++)
         {
-            workers[t] = thread(Model::set_weights, t*step, (t+1)*step, std::ref(fN), std::ref(e), std::ref(fWeights));
+            workers[t] = thread(Model::set_weights, t * step, (t + 1) * step, std::ref(fN), std::ref(e), std::ref(fWeights));
         }
         workers[t] = thread(Model::set_weights, t * step, fN, std::ref(fN), std::ref(e), std::ref(fWeights));
     }
-        for (size_t t = 0; t < fNumThreads; t++)
-        {
-            workers[t].join();
-        }
-
-        fState = kTrained;
-        //w_ij = 1/N sum_mu e_i e_j
+    for (size_t t = 0; t < fNumThreads; t++)
+    {
+        workers[t].join();
     }
 
-void Model::train()
+    fState = kTrained;
+    //w_ij = 1/N sum_mu e_i e_j
+}
+
+void Model::train(devices device)
+{
+    if (device != kNull)
+        fDevice = device;
+
+    switch (fDevice)
+    {
+    case kNull:
+        trainCPU();
+        break;
+    case kCPU:
+        trainCPU();
+        break;
+    case kMultiThread:
+        train(fNumThreads);
+        break;
+    case kGPU:
+    #ifdef __APPLE__
+        trainGPU();
+        #else
+        train(fNumThreads);
+    #endif
+        break;
+    default:
+        break;
+    }
+}
+
+void Model::trainCPU()
 {
     cout << "Training model" << endl;
     for (uint8_t i = 0; i < fN; i++)
@@ -119,11 +150,11 @@ void Model::train(size_t num_threads)
     uint8_t step = fN / num_threads;
     {
         size_t t = 0;
-         for (; t < num_threads-1; t++)
+        for (; t < num_threads - 1; t++)
         {
-            workers[t] = thread(Model::sum_neurons, t*step, (t+1)*step, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
+            workers[t] = thread(Model::sum_neurons, t * step, (t + 1) * step, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
         }
-        workers[t] = thread(Model::sum_neurons, t*step, fN, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
+        workers[t] = thread(Model::sum_neurons, t * step, fN, std::ref(fN), std::ref(fWeights), std::ref(fNeurons));
     }
     for (size_t t = 0; t < num_threads; t++)
     {
@@ -134,6 +165,7 @@ void Model::train(size_t num_threads)
     //S_i=sgn(h_i)
 }
 
+#ifdef __APPLE__
 void Model::trainGPU()
 {
     cout << "Training model on GPU" << endl;
@@ -150,6 +182,7 @@ void Model::trainGPU()
     //h_i = sum_j w_ij S_j
     //S_i=sgn(h_i)
 }
+#endif
 
 void Model::predict(Memory img)
 {
@@ -162,8 +195,8 @@ void Model::predict(Memory img)
     cout << "Predicting" << endl;
     //set neurons
     std::memcpy(fNeurons, img.fData, img.size());
-    train(fNumThreads);
-    std::memcpy(img.fData, fNeurons, fN);
+    train();
+    std::memcpy(img.fData, fNeurons, fN * sizeof(uint8_t));
 }
 
 void Model::reconstruct(Memory &img)
@@ -171,7 +204,7 @@ void Model::reconstruct(Memory &img)
     cout << "Reconstructing" << endl;
     //set neurons
     predict(img);
-    std::memcpy(img.fData, fNeurons, fN);
+    std::memcpy(img.fData, fNeurons, fN * sizeof(uint8_t));
 }
 
 std::ostream &operator<<(std::ostream &out, Model &m)
