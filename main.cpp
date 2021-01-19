@@ -4,8 +4,6 @@
 
 using namespace std;
 
-//#undef __APPLE__
-
 int main(){
     test_1();
     cout<<endl;
@@ -23,15 +21,6 @@ int main(){
     cout << endl;
 
     test_6();
-    cout << endl;
-
-    test_7();
-    cout<<endl;
-
-    test_8();
-    cout << endl;
-
-    test_9();
     cout << endl;
 
     return 0;
