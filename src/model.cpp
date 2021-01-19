@@ -98,7 +98,11 @@ void Model::train(devices device)
         train(fNumThreads);
         break;
     case kGPU:
+    #ifdef __APPLE__
         trainGPU();
+        #else
+        train(fNumThreads);
+    #endif
         break;
     default:
         break;
@@ -161,6 +165,7 @@ void Model::train(size_t num_threads)
     //S_i=sgn(h_i)
 }
 
+#ifdef __APPLE__
 void Model::trainGPU()
 {
     cout << "Training model on GPU" << endl;
@@ -177,6 +182,7 @@ void Model::trainGPU()
     //h_i = sum_j w_ij S_j
     //S_i=sgn(h_i)
 }
+#endif
 
 void Model::predict(Memory img)
 {

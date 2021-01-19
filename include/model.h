@@ -12,7 +12,6 @@
 #include "memory.h"
 #include "matrix_helper.h"
 
-
 using std::cout;
 using std::endl;
 
@@ -41,7 +40,9 @@ private:
     void init();
     void trainCPU();
     void train(size_t num_threads);
+    #ifdef __APPLE__
     void trainGPU();
+    #endif
     static void sum_neurons(const uint8_t , const uint8_t , const uint8_t, const float *, spin *);
     static void set_weights(const uint8_t start, const uint8_t end, const uint8_t N, const std::vector<Memory> &e, float *weights);
 

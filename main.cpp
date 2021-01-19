@@ -4,6 +4,8 @@
 
 using namespace std;
 
+//#undef __APPLE__
+
 int main(){
     test_1();
     cout<<endl;
