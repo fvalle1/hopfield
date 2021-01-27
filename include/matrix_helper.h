@@ -10,6 +10,8 @@
 #include <cstring>
 #include <exception>
 
+#include "device.h"
+
 #ifdef __APPLE__
 #include "mtlpp.hpp"
 
