@@ -1,14 +1,17 @@
 #include "device.h"
 
-void Device::Describe(const mtlpp::Device &dev)
+#ifdef __APPLE__
+template <typename T>
+void Describe(const T& dev)
 {
     cout << dev.GetName().GetCStr() << endl;
     cout << "It is " << (dev.IsLowPower() ? "" : " not ") << "low power" << endl;
     cout << "It is " << (dev.IsRemovable() ? "" : " not ") << "removable" << endl;
     cout << "It has " << (dev.HasUnifiedMemory() ? "" : " not ") << "unified memory" << endl;
 }
+#endif
 
-void Device::PrintDevices(){
+void PrintDevices(){
 #ifdef __APPLE__
     auto devices = mtlpp::Device::CopyAllDevices();
     cout << "I found " << sizeof(devices) / sizeof(devices[0]) << " devices" << endl;
@@ -16,7 +19,7 @@ void Device::PrintDevices(){
     {
         for (uint8_t idev = 0; idev < devices.GetSize(); idev++)
         {
-            Device::Describe(devices[idev]);
+            Describe<mtlpp::Device>(devices[idev]);
         }
     }
     catch (std::exception e)

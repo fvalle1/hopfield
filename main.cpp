@@ -9,7 +9,7 @@ using namespace std;
 
 int main()
 {
-    Device::PrintDevices();
+    PrintDevices();
 
     Test<std::function<void()>, StopwatchMillis>(test_1, "test 1");
     Test<std::function<void()>, StopwatchMillis>(test_2, "test 2");

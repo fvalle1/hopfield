@@ -12,12 +12,4 @@
 using std::cout;
 using std::endl;
 
-class Device: public Device_I<mtlpp::Device>{
-
-public:
-    static void Describe(const mtlpp::Device &);
-    static void PrintDevices();
-
-};
-
 #endif
