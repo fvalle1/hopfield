@@ -21,5 +21,6 @@ int main()
     Test<std::function<void()>, StopwatchMillis>(test_8, "test 8");
     Test<std::function<void()>, StopwatchMillis>(test_9, "test 9");
 
+
     return 0;
 }
