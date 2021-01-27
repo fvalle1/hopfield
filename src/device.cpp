@@ -30,3 +30,12 @@ void PrintDevices(){
     cout<<"No metal GPU device available on this platform"<<endl;
 #endif
 }
+
+bool IsGPUAvailable(){
+#ifdef __APPLE__
+    auto devices = mtlpp::Device::CopyAllDevices();
+    return (sizeof(devices) / sizeof(devices[0])) > 0;
+#else
+    return false;
+#endif
+}

@@ -6,5 +6,7 @@ void Describe(const T& dev);
 
 void PrintDevices();
 
+bool IsGPUAvailable();
+
 
 #endif

@@ -17,10 +17,13 @@ int main()
     Test<std::function<void()>, StopwatchMillis>(test_4, "test 4");
     Test<std::function<void()>, StopwatchMillis>(test_5, "test 5");
     Test<std::function<void()>, StopwatchMillis>(test_6, "test 6");
-    Test<std::function<void()>, StopwatchMillis>(test_7, "test 7");
-    Test<std::function<void()>, StopwatchMillis>(test_8, "test 8");
-    Test<std::function<void()>, StopwatchMillis>(test_9, "test 9");
 
+    if (IsGPUAvailable())
+    {
+        Test<std::function<void()>, StopwatchMillis>(test_7, "test 7");
+        Test<std::function<void()>, StopwatchMillis>(test_8, "test 8");
+        Test<std::function<void()>, StopwatchMillis>(test_9, "test 9");
+    }
 
     return 0;
 }
