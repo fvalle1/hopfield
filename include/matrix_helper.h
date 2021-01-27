@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <chrono>
 #include <thread>
 #include <cmath>
 #include <numeric>

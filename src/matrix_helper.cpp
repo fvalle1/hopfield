@@ -5,8 +5,6 @@ using std::endl;
 
 void multiply_matrix_vector(void *matrix, void *vector, void *result, const uint16_t N = 64, const uint16_t K = 128)
 {
-    Device::PrintDevices();
-
     mtlpp::Device device = mtlpp::Device::CreateSystemDefaultDevice();
     assert(device);
 
@@ -51,7 +49,6 @@ void multiply_matrix_vector(void *matrix, void *vector, void *result, const uint
         paramsBuffer.DidModify(ns::Range(0, sizeof(uint16_t) * 2));
     }
 
-    auto gpu_start = std::chrono::steady_clock::now();
     mtlpp::CommandBuffer commandBuffer = commandQueue.CommandBuffer();
     assert(commandBuffer);
 
@@ -79,15 +76,10 @@ void multiply_matrix_vector(void *matrix, void *vector, void *result, const uint
         float *outData = static_cast<float *>(outBuffer.GetContents());
         std::memmove(result, outData, N * sizeof(float));
     }
-
-    auto gpu_time = static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(gpu_end - gpu_start).count());
-    std::cout << "Time (GPU[Metal]) = " << gpu_time << "[ms]" << std::endl;
 }
 
 void multiply_matrix_matrix(void *matrix_first, void *matrix_second, void *result, const uint16_t N, const uint16_t K, const uint16_t M)
 {
-
-    Device::PrintDevices();
     mtlpp::Device device = mtlpp::Device::CreateSystemDefaultDevice();
     assert(device);
 
@@ -134,7 +126,6 @@ void multiply_matrix_matrix(void *matrix_first, void *matrix_second, void *resul
         paramsBuffer.DidModify(ns::Range(0, sizeof(uint16_t) * 3));
     }
 
-    auto gpu_start = std::chrono::steady_clock::now();
     mtlpp::CommandBuffer commandBuffer = commandQueue.CommandBuffer();
     assert(commandBuffer);
 
@@ -162,7 +153,4 @@ void multiply_matrix_matrix(void *matrix_first, void *matrix_second, void *resul
         float *outData = static_cast<float *>(outBuffer.GetContents());
         std::memmove((float *)result, outData, N * M * sizeof(float));
     }
-
-    auto gpu_time = static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(gpu_end - gpu_start).count());
-    std::cout << "Time (GPU[Metal]) = " << gpu_time << "[ms]" << std::endl;
 }

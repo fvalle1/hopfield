@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "reader.h"
 #include "writer.h"
+#include "stopwatch.h"
 
 using namespace std;
 
