@@ -1,27 +1,29 @@
 #include "memory.h"
 #include "model.h"
-#include "tests/tests.h"
+#include "tests/test.h"
+#include "device.h"
 
 using namespace std;
 
-int main(){
-    test_1();
-    cout<<endl;
+//#undef __APPLE__
 
-    test_2();
-    cout << endl;
+int main()
+{
+    PrintDevices();
 
-    test_3();
-    cout << endl;
+    Test<std::function<void()>, StopwatchMillis>(test_1, "test 1");
+    Test<std::function<void()>, StopwatchMillis>(test_2, "test 2");
+    Test<std::function<void()>, StopwatchMillis>(test_3, "test 3");
+    Test<std::function<void()>, StopwatchMillis>(test_4, "test 4");
+    Test<std::function<void()>, StopwatchMillis>(test_5, "test 5");
+    Test<std::function<void()>, StopwatchMillis>(test_6, "test 6");
 
-    test_4();
-    cout << endl;
-
-    test_5();
-    cout << endl;
-
-    test_6();
-    cout << endl;
+    if (IsGPUAvailable())
+    {
+        Test<std::function<void()>, StopwatchMillis>(test_7, "test 7");
+        Test<std::function<void()>, StopwatchMillis>(test_8, "test 8");
+        Test<std::function<void()>, StopwatchMillis>(test_9, "test 9");
+    }
 
     return 0;
 }
