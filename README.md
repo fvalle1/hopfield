@@ -1,5 +1,6 @@
-![CI](https://github.com/fvalle1/hopfield/workflows/Compile/badge.svg)
+![Compile](https://github.com/fvalle1/hopfield/workflows/Compile/badge.svg)
 ![Compile w/o Metal](https://github.com/fvalle1/hopfield/workflows/Compile%20w/o%20Metal/badge.svg)
+![Compile CMake](https://github.com/fvalle1/hopfield/workflows/Compile%20CMake/badge.svg)
 ![Run](https://github.com/fvalle1/hopfield/workflows/Run/badge.svg)
 
 # hopfield
