@@ -7,6 +7,8 @@ hopfield network implementation in C++
 
 # compile
 ```bash
+mkdir build && cd build
+cmake ..
 make
 ```
 
@@ -15,13 +17,22 @@ This repository uses the [Metal](https://developer.apple.com/metal/) framework t
 ```bash
 make all_nometal CXX=g++
 ```
+it will ceate an executable called *hopfield_nometal.out*
 
-It will ceate an executable called *hopfield_nometal.out*
+Alternatively you can use *cmake* which automatically handles libraries
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
 
 # run
 ```bash
 ./hopfield
 ```
+
+On Apple devices be sure to run from the home folder (shaders are required to be in the correct path at runtime)
 
 # License
 See [LICENSE](LICENSE)
