@@ -28,8 +28,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install g++ cmake -y
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew install cmake
           
       # Runs a set of commands using the runners shell
       - name: Makedir build
