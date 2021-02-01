@@ -25,7 +25,7 @@ enum states
 class Model : public Model_I<Memory>
 {
 public:
-    Model(uint8_t P, uint8_t N, size_t num_threads = 4, devices device = kNull);
+    Model(uint16_t P, uint16_t N, size_t num_threads = 4, devices device = kNull);
 
     ~Model();
 
@@ -43,12 +43,12 @@ private:
     #ifdef __APPLE__
     void trainGPU();
     #endif
-    static void sum_neurons(const uint8_t , const uint8_t , const uint8_t, const float *, spin *);
-    static void set_weights(const uint8_t start, const uint8_t end, const uint8_t N, const std::vector<Memory> &e, float *weights);
+    static void sum_neurons(const uint16_t , const uint16_t , const uint16_t, const float *, spin *);
+    static void set_weights(const uint16_t start, const uint16_t end, const uint16_t N, const std::vector<Memory> &e, float *weights);
 
     states fState;
-    uint8_t fP;
-    uint8_t fN;
+    uint16_t fP;
+    uint16_t fN;
     size_t fNumThreads;
     spin *fNeurons;
     float *fWeights;

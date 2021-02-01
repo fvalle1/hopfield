@@ -12,7 +12,7 @@ TOCLEAN = *.out $(TARGETS) $(LIBS)
 
 all: hopfield.out
 
-hopfield.out: main.cpp $(TARGETS) $(APPLE_TARGETS) $(LIBS)
+hopfield: main.cpp $(TARGETS) $(APPLE_TARGETS) $(LIBS)
 	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) $(LINKER_FLAGS) $^ -o $@
 
 all_nometal: hopfield_nometal.out

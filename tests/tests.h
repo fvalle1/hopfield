@@ -277,3 +277,32 @@ void test_9()
     delete reader;
     delete writer;
 }
+
+void test_10(){
+    auto reader = new Reader("test.csv");
+    auto writer = new Writer("reconstructed.csv");
+    auto training_dataset = vector<Memory>();
+    Memory::SetSize(3);
+    reader->read(training_dataset, ',');
+
+    auto model = Model(training_dataset.size(), training_dataset[0].size());
+    model.load_memories(training_dataset);
+
+    model.train(kGPU);
+
+    auto corrupt_reader = new Reader("corrupted.csv");
+    auto test_dataset = vector<Memory>();
+    corrupt_reader->read(test_dataset, ',');
+    model.reconstruct(test_dataset[0]);
+
+    writer->write(test_dataset);
+    cout << endl
+         << endl;
+
+    cout << model;
+
+    training_dataset.clear();
+
+    delete reader;
+    delete writer;
+}

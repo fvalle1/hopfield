@@ -1,6 +1,6 @@
 #include "memory.h"
 
-uint8_t Memory::fSize = 6;
+uint16_t Memory::fSize = 6;
 
 Memory::Memory()
 {
@@ -19,7 +19,7 @@ Memory::Memory(int size, ...)
     va_list ap;
     va_start(ap, size);
     fData = new spin[fSize];
-    for (uint8_t i = 0; i < size; i++)
+    for (auto i = 0; i < size; i++)
     {
         fData[i] = va_arg(ap, int) > 0;
     }
@@ -55,8 +55,8 @@ Streamer& Memory::PrintMe(Streamer& out, Memory &m, char sep){
     uint8_t i = 0;
     for (; i < m.fSize - 1; i++)
     {
-        out << (static_cast<int>(m[i]) > 0 ? 1 : 0) << sep;
+        out << (m[i] > 0 ? 1 : 0) << sep;
     }
-    out << (static_cast<int>(m[i]) > 0 ? 1 : 0);
+    out << (m[i] > 0 ? 1 : 0);
     return out;
 }

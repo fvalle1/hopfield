@@ -23,18 +23,18 @@ struct Memory : public Memory_I<uint8_t, int8_t>
     Memory(const Memory &source);
     ~Memory();
 
-    inline int8_t operator[](uint8_t idx) { return fData[idx] ? 1 : -1; };
-    inline uint8_t size() { return fSize; };
-    inline uint8_t size_of() { return fSize * sizeof(spin); };
+    inline int operator[](uint16_t idx) { return fData[idx] ? 1 : -1; };
+    inline uint16_t size() { return fSize; };
+    inline uint16_t size_of() { return fSize * sizeof(spin); };
     friend std::ostream &operator<<(std::ostream &out, Memory &m);
     friend std::ofstream &operator<<(std::ofstream &out, Memory &m);
 
-    inline static void SetSize(uint8_t size) { fSize = size; };
+    inline static void SetSize(uint16_t size) { fSize = size; };
 
     spin *fData;
 
 private:
-    static uint8_t fSize;
+    static uint16_t fSize;
 
     template <typename Streamer>
     static Streamer &PrintMe(Streamer &out, Memory &m, char sep = ' ');

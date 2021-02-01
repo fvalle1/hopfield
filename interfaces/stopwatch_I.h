@@ -7,7 +7,7 @@
 #include <string>
 #endif
 
-#if defined(_OPENMP) // per fare calcolo parallelo
+#if defined(_OPENMP) 
 #include <omp.h>     // Open Multiprocessing
 #endif
 
@@ -21,7 +21,7 @@ struct Milliseconds
     inline static std::string GetMU() { return "milliseconds"; };
 };
 
-template <typename time_mearuse, typename unit_measure>
+template <typename time_measure, typename unit_measure>
 class Stopwatch_I
 {
 public:
@@ -45,7 +45,7 @@ public:
     }
 
 protected:
-    inline double GetWall() const { return std::chrono::duration_cast<time_mearuse>(std::chrono::system_clock::now() - fSystemTime).count(); };
+    inline double GetWall() const { return std::chrono::duration_cast<time_measure>(std::chrono::system_clock::now() - fSystemTime).count(); };
     inline double GetCPU() const { return (std::clock() - fCPUTime) / (double)CLOCKS_PER_SEC; }
 #if defined(_OPENMP)
     inline double GetOMP() const

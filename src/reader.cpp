@@ -13,7 +13,7 @@ Reader::~Reader()
     delete fFile;
 }
 
-void Reader::read(vector<Memory> &data)
+void Reader::read(vector<Memory> &data, const char sep)
 {
     if (!fIsOpen)
     {
@@ -31,7 +31,7 @@ void Reader::read(vector<Memory> &data)
 
         auto new_point = std::vector<int>();
 
-        while (getline(iss, elem, ','))
+        while (getline(iss, elem, sep))
         {
             new_point.push_back(stoi(elem));
         }

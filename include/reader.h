@@ -17,7 +17,7 @@ public:
 
     ~Reader();
 
-    void read(vector<Memory>& );
+    void read(vector<Memory> &, const char sep = ',');
 
 private:
 

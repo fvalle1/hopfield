@@ -2,15 +2,15 @@
 
 std::mutex Model::fLoading_mutex;
 
-Model::Model(uint8_t P, uint8_t N, size_t num_threads, devices device) : fP(P),
-                                                                         fN(N),
-                                                                         fNumThreads(num_threads),
-                                                                         fDevice(device)
+Model::Model(uint16_t P, uint16_t N, size_t num_threads, devices device) : fP(P),
+                                                                           fN(N),
+                                                                           fNumThreads(num_threads),
+                                                                           fDevice(device)
 {
     fState = kUninit;
     cout << "Creating model" << endl;
-    cout << "with " << (unsigned int)fN << " neurons" << endl;
-    cout << "and " << (unsigned int)fP << " memories" << endl;
+    cout << "with " << fN << " neurons" << endl;
+    cout << "and " << fP << " memories" << endl;
     fNeurons = new spin[fN];
     fWeights = new float[fN * fN];
 };
@@ -24,10 +24,10 @@ Model::~Model()
 
 void Model::init()
 {
-    for (uint8_t i = 0; i < fN; i++)
+    for (auto i = 0; i < fN; i++)
     {
         fNeurons[i] = 1;
-        for (uint8_t j = 0; j < fN; j++)
+        for (auto j = 0; j < fN; j++)
         {
             fWeights[i * fN + j] = 0;
         }
@@ -35,11 +35,11 @@ void Model::init()
     fState = kInit;
 }
 
-void Model::set_weights(const uint8_t start, const uint8_t end, const uint8_t N, const std::vector<Memory> &e, float *weights)
+void Model::set_weights(const uint16_t start, const uint16_t end, const uint16_t N, const std::vector<Memory> &e, float *weights)
 {
-    for (uint8_t i = start; i < end; i++)
+    for (auto i = start; i < end; i++)
     {
-        for (uint8_t j = 0; j < N; j++)
+        for (auto j = 0; j < N; j++)
         {
             auto psum = 0.;
             for (auto memory : e)
@@ -63,7 +63,7 @@ void Model::load_memories(std::vector<Memory> e)
 
     using std::thread;
     thread workers[fNumThreads];
-    uint8_t step = fN / fNumThreads;
+    uint16_t step = fN / fNumThreads;
     {
         size_t t = 0;
         for (; t < fNumThreads - 1; t++)
@@ -112,10 +112,10 @@ void Model::train(devices device)
 void Model::trainCPU()
 {
     cout << "Training model" << endl;
-    for (uint8_t i = 0; i < fN; i++)
+    for (auto i = 0; i < fN; i++)
     {
         auto h = 0.;
-        for (uint8_t j = 0; j < fN; j++)
+        for (auto j = 0; j < fN; j++)
         {
             h += fWeights[i * fN + j] * (fNeurons[j] ? 1 : -1);
         }
@@ -126,13 +126,13 @@ void Model::trainCPU()
     //S_i=sgn(h_i)
 }
 
-void Model::sum_neurons(const uint8_t start, const uint8_t end, const uint8_t N, const float *weight, spin *neurons)
+void Model::sum_neurons(const uint16_t start, const uint16_t end, const uint16_t N, const float *weight, spin *neurons)
 {
 
-    for (uint8_t i = start; i < end; i++)
+    for (auto i = start; i < end; i++)
     {
         auto h = 0.;
-        for (uint8_t j = 0; j < N; j++)
+        for (auto j = 0; j < N; j++)
         {
             h += weight[i * N + j] * (neurons[j] ? 1 : -1);
         }
@@ -174,7 +174,7 @@ void Model::trainGPU()
 
     multiply_matrix_vector(fWeights, fNeurons, h, this->fN, this->fN);
 
-    for (uint8_t i = 0; i < fN; i++)
+    for (auto i = 0; i < fN; i++)
     {
         fNeurons[i] = h[i] > 0.;
     }
@@ -194,9 +194,9 @@ void Model::predict(Memory img)
 
     cout << "Predicting" << endl;
     //set neurons
-    std::memcpy(fNeurons, img.fData, img.size());
+    std::memcpy(fNeurons, img.fData, img.size_of());
     train();
-    std::memcpy(img.fData, fNeurons, fN * sizeof(uint8_t));
+    std::memcpy(img.fData, fNeurons, fN * sizeof(spin));
 }
 
 void Model::reconstruct(Memory &img)
@@ -204,16 +204,16 @@ void Model::reconstruct(Memory &img)
     cout << "Reconstructing" << endl;
     //set neurons
     predict(img);
-    std::memcpy(img.fData, fNeurons, fN * sizeof(uint8_t));
+    std::memcpy(img.fData, fNeurons, fN * sizeof(spin));
 }
 
 std::ostream &operator<<(std::ostream &out, Model &m)
 {
     out << "*********** Model ***********" << endl;
     out << "***** Weights *****" << endl;
-    for (uint8_t i = 0; i < m.fN; i++)
+    for (auto i = 0; i < m.fN; i++)
     {
-        for (uint8_t j = 0; j < m.fN; j++)
+        for (auto j = 0; j < m.fN; j++)
         {
             out << m.fWeights[i * m.fN + j] << "\t";
         }
@@ -221,7 +221,7 @@ std::ostream &operator<<(std::ostream &out, Model &m)
     }
 
     out << "***** Neurons *****" << endl;
-    for (uint8_t i = 0; i < m.fN; i++)
+    for (auto i = 0; i < m.fN; i++)
     {
         out << m.fNeurons[i] << "\t";
     }
