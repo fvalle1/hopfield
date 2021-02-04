@@ -1,7 +1,8 @@
 ![Compile](https://github.com/fvalle1/hopfield/workflows/Compile/badge.svg)
 ![Compile w/o Metal](https://github.com/fvalle1/hopfield/workflows/Compile%20w/o%20Metal/badge.svg)
-![Compile CMake](https://github.com/fvalle1/hopfield/workflows/Compile%20CMake/badge.svg?branch=main)
-![Run Ubuntu](https://github.com/fvalle1/hopfield/workflows/Run%20Ubuntu/badge.svg)
+![Build CMake Linux](https://github.com/fvalle1/hopfield/workflows/Compile%20CMake/badge.svg?branch=main)
+![Build CMake Macos](https://github.com/fvalle1/hopfield/workflows/Build%20CMake%20Macos/badge.svg)
+![Run Linux](https://github.com/fvalle1/hopfield/workflows/Run%20Ubuntu/badge.svg)
 ![Run MacOS](https://github.com/fvalle1/hopfield/workflows/Run/badge.svg)
 
 # hopfield
