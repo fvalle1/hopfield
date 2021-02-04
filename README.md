@@ -65,7 +65,7 @@ On Apple devices be sure to run from the home folder (shaders are required to be
     cout << model;
 ```
 
-More examples are in the [test](test/) folder.
+More examples are in the [tests](tests/) folder.
 
 # Issues
 The Github Action RunMacOS sometime fails due to lack of GPU access.
