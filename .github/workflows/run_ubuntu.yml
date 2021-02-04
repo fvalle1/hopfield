@@ -33,4 +33,4 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run
         run:
-          ./hopfield.out
+          ./hopfield_nometal.out
