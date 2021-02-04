@@ -39,7 +39,7 @@ public:
         std::cout << fName << " runned in: " << GetWall() << " " << unit_measure::GetMU() << " [Wall time]" << std::endl;
         std::cout << fName << " runned in: " << GetCPU() << " " << unit_measure::GetMU() << " [CPU time]" << std::endl;
 #if defined(_OPENMP)
-        std::cout << "Runned in: " << GetOMP() << " sec [OMP time]" << std::endl;
+        std::cout << fName << " runned in: " << GetOMP() << " sec [OMP time]" << std::endl;
 #endif
         std::cout << std::endl;
     }

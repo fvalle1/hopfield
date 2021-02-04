@@ -21,6 +21,7 @@ void test_1()
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
+    model.train();
     model.reconstruct(corrupted_memory);
 
     cout << "Reconstructed: " << endl;
@@ -49,6 +50,7 @@ void test_2()
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
+    model.train();
     model.reconstruct(corrupted_memory);
 
     cout << "Reconstructed: " << endl;
@@ -81,6 +83,7 @@ void test_3()
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
+    model.train();
     model.reconstruct(corrupted_memory);
 
     cout << "Reconstructed: " << endl;
@@ -110,6 +113,7 @@ void test_4()
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
+    model.train();
     model.reconstruct(corrupted_memory);
 
     cout << "Reconstructed: " << endl;
@@ -140,6 +144,7 @@ void test_5()
     Memory corrupted_memory;
     std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
 
+    model.train();
     model.reconstruct(corrupted_memory);
 
     cout << "Reconstructed: " << endl;
@@ -305,4 +310,33 @@ void test_10(){
 
     delete reader;
     delete writer;
+}
+
+void test_11()
+{
+    std::vector<Memory> training_dataset;
+    
+    Memory::SetSize(6);
+    training_dataset.emplace_back(Memory(6, 1, 1, 0, 0, 1, 1));
+    training_dataset.emplace_back(Memory(6, 1, 1, 1, 1, 1, 1));
+
+    auto model = Model(training_dataset.size(), training_dataset[0].size(), 4, kOMP);
+    model.load_memories(training_dataset);
+
+    spin corrupted_data[] = {1, 1, 1, 1, 1, 0};
+    Memory corrupted_memory;
+    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
+
+    model.train();
+    model.reconstruct(corrupted_memory);
+
+    cout << "Reconstructed: " << endl;
+    for (uint8_t i = 0; i < corrupted_memory.size(); i++)
+    {
+        cout << corrupted_memory.fData[i] << " ";
+    }
+    cout << endl
+         << endl;
+
+    cout << model;
 }

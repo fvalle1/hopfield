@@ -4,6 +4,10 @@ project(hopfield)
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_FLAGS -O3)
 
+find_package(OpenMP)
+if (OpenMP_CXX_FOUND)
+endif()
+
 include_directories(
     include/
     interfaces/
@@ -30,7 +34,7 @@ add_library(mtlpp
 )
 
 target_compile_options(mtlpp PRIVATE -x objective-c++)
-target_link_libraries(hopfield 
+target_link_libraries(hopfield PUBLIC
             "-framework Metal"
             "-framework MetalKit"
             "-framework Cocoa"
@@ -39,10 +43,14 @@ target_link_libraries(hopfield
             mtlpp
             )
 else()
-find_package (Threads)
+find_package(Threads)
 add_executable(hopfield
                 ${FILES}
 )
 
-target_link_libraries(hopfield ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(hopfield PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+endif()
+
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(hopfield PUBLIC OpenMP::OpenMP_CXX)
 endif()

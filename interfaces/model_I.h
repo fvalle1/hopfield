@@ -8,7 +8,8 @@ enum devices
     kNull,
     kCPU,
     kMultiThread,
-    kGPU
+    kOMP,
+    kGPU,
 };
 
 template <class data>

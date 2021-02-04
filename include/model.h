@@ -8,6 +8,10 @@
 #include <thread>
 #include <mutex>
 
+#ifdef _OPENMP
+    #include <omp.h>
+#endif
+
 #include "model_I.h"
 #include "memory.h"
 #include "matrix_helper.h"
@@ -40,6 +44,9 @@ private:
     void init();
     void trainCPU();
     void train(size_t num_threads);
+    #ifdef _OPENMP
+    void trainOMP(size_t num_threads);
+    #endif
     #ifdef __APPLE__
     void trainGPU();
     #endif

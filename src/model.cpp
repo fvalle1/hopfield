@@ -97,10 +97,19 @@ void Model::train(devices device)
     case kMultiThread:
         train(fNumThreads);
         break;
+    case kOMP:
+#ifdef _OPENMP
+        trainOMP(fNumThreads);
+#else
+        std::cerr<<"OpenMP not available"<<std::endl;
+        train(fNumThreads);
+#endif
+        break;
     case kGPU:
     #ifdef __APPLE__
         trainGPU();
         #else
+        std::cerr<<"GPU not available"<<std::endl;
         train(fNumThreads);
     #endif
         break;
@@ -181,6 +190,26 @@ void Model::trainGPU()
 
     //h_i = sum_j w_ij S_j
     //S_i=sgn(h_i)
+}
+#endif
+
+#ifdef _OPENMP
+void Model::trainOMP(size_t num_threads){
+    cout << "Training model" << endl;
+   
+    omp_set_num_threads(num_threads);
+
+    #pragma omp parallel for shared(fWeights, fNeurons)
+    for (auto i = 0; i < fN; i++)
+    {
+        auto h = 0.;
+        for (auto j = 0; j < fN; j++)
+        {
+            h += fWeights[i * fN + j] * (fNeurons[j] ? 1 : -1);
+        }
+
+        fNeurons[i] = h > 0.;
+    }
 }
 #endif
 
