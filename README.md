@@ -29,12 +29,43 @@ cmake ..
 make
 ```
 
-# run
+# Run
 ```bash
 ./hopfield
 ```
 
 On Apple devices be sure to run from the home folder (shaders are required to be in the correct path at runtime)
+
+# Example
+```cpp
+
+    // Create a dataset with memories
+    std::vector<Memory> training_dataset;
+    training_dataset.emplace_back(Memory(6, 1, 1, 0, 0, 1, 1));
+    training_dataset.emplace_back(Memory(6, 1, 1, 1, 1, 1, 1));
+
+    //Create a model
+    auto model = Model(training_dataset.size(), training_dataset[0].size());
+    model.load_memories(training_dataset);
+
+
+    // Build a corrupted memory
+    spin corrupted_data[] = {1, 1, 1, 1, 1, 0};
+    Memory corrupted_memory;
+    std::memmove(corrupted_memory.fData, corrupted_data, corrupted_memory.size_of());
+
+    // Train the model. Use can use kNull, kCPU, kGPU, kMultiThread, kOMP
+    // If the chosen device is not available another one is automatically picked up
+    model.train(kCPU);
+    model.reconstruct(corrupted_memory);
+
+    cout << "Reconstructed: " << endl;
+    for (uint8_t i = 0; i < corrupted_memory.size(); i++) cout << corrupted_memory.fData[i] << " ";
+
+    cout << model;
+```
+
+More examples are in the [test](test/) folder.
 
 # Issues
 The Github Action RunMacOS sometime fails due to lack of GPU access.
