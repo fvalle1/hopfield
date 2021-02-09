@@ -71,7 +71,10 @@ More examples are in the [tests](tests/tests.h) folder.
 # With images
 
 Example with a corrupted image of an "8" hanwritten.
+
 ![corrupted image](corrupted.png)
+
+After it is reconstructed the black band disappears.
 
 ![reconstructed image](reconstructed.png)
 
