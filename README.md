@@ -1,7 +1,8 @@
 ![Compile](https://github.com/fvalle1/hopfield/workflows/Compile/badge.svg)
 ![Compile w/o Metal](https://github.com/fvalle1/hopfield/workflows/Compile%20w/o%20Metal/badge.svg)
-![Compile CMake](https://github.com/fvalle1/hopfield/workflows/Compile%20CMake/badge.svg?branch=main)
-![Run Ubuntu](https://github.com/fvalle1/hopfield/workflows/Run%20Ubuntu/badge.svg)
+![Build CMake Linux](https://github.com/fvalle1/hopfield/workflows/Build%20CMake/badge.svg?branch=main)
+![Build CMake Macos](https://github.com/fvalle1/hopfield/workflows/Build%20CMake%20Macos/badge.svg)
+![Run Linux](https://github.com/fvalle1/hopfield/workflows/Run%20Ubuntu/badge.svg)
 ![Run MacOS](https://github.com/fvalle1/hopfield/workflows/Run/badge.svg)
 
 # hopfield
@@ -65,7 +66,7 @@ On Apple devices be sure to run from the home folder (shaders are required to be
     cout << model;
 ```
 
-More examples are in the [test](test/) folder.
+More examples are in the [tests](tests/tests.h) folder.
 
 # Issues
 The Github Action RunMacOS sometime fails due to lack of GPU access.
