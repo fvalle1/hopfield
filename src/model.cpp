@@ -120,7 +120,7 @@ void Model::train(devices device)
 
 void Model::trainCPU()
 {
-    cout << "Training model" << endl;
+    cout << "Training model [CPU]" << endl;
     for (auto i = 0; i < fN; i++)
     {
         auto h = 0.;
@@ -152,7 +152,7 @@ void Model::sum_neurons(const uint16_t start, const uint16_t end, const uint16_t
 
 void Model::train(size_t num_threads)
 {
-    cout << "Training model" << endl;
+    cout << "Training model [std::thread]" << endl;
 
     using std::thread;
     thread workers[num_threads];
@@ -177,7 +177,7 @@ void Model::train(size_t num_threads)
 #ifdef __APPLE__
 void Model::trainGPU()
 {
-    cout << "Training model on GPU" << endl;
+    cout << "Training model [GPU]" << endl;
 
     float h[fN];
 
@@ -195,19 +195,22 @@ void Model::trainGPU()
 
 #ifdef _OPENMP
 void Model::trainOMP(size_t num_threads){
-    cout << "Training model" << endl;
+    cout << "Training model [OpenMP]" << endl;
    
     omp_set_num_threads(num_threads);
+    omp_set_nested(1);
 
-    #pragma omp parallel for shared(fWeights, fNeurons)
+#pragma omp parallel for shared(fWeights, fNeurons)
     for (auto i = 0; i < fN; i++)
     {
         auto h = 0.;
+#pragma omp parallel for shared(fWeights, fNeurons) reduction(+: h)
         for (auto j = 0; j < fN; j++)
         {
             h += fWeights[i * fN + j] * (fNeurons[j] ? 1 : -1);
         }
 
+        #pragma omp atomic write
         fNeurons[i] = h > 0.;
     }
 }
