@@ -180,8 +180,11 @@ void Model::trainGPU()
     cout << "Training model [GPU]" << endl;
 
     float h[fN];
+    float neurons[fN];
+    for (auto i = 0; i < fN; i++)
+        neurons[i] = fNeurons[i] ? 1. : -1.;
 
-    multiply_matrix_vector(fWeights, fNeurons, h, this->fN, this->fN);
+    multiply_matrix_vector(fWeights, neurons, h, this->fN, this->fN);
 
     for (auto i = 0; i < fN; i++)
     {
