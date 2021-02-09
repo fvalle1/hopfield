@@ -52,7 +52,7 @@ std::ofstream &operator<<(std::ofstream &out, Memory &m)
 
 template<typename Streamer>
 Streamer& Memory::PrintMe(Streamer& out, Memory &m, char sep){
-    uint8_t i = 0;
+    auto i = 0;
     for (; i < m.fSize - 1; i++)
     {
         out << (m[i] > 0 ? 1 : 0) << sep;
