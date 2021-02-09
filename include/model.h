@@ -57,7 +57,7 @@ private:
     uint16_t fP;
     uint16_t fN;
     size_t fNumThreads;
-    spin *fNeurons;
+    spin* fNeurons;
     float *fWeights;
     devices fDevice;
 

@@ -198,17 +198,19 @@ void Model::trainOMP(size_t num_threads){
     cout << "Training model [OpenMP]" << endl;
    
     omp_set_num_threads(num_threads);
+    omp_set_nested(1);
 
-    #pragma omp parallel for
+#pragma omp parallel for shared(fWeights, fNeurons)
     for (auto i = 0; i < fN; i++)
     {
         auto h = 0.;
+#pragma omp parallel for shared(fWeights, fNeurons) reduction(+: h)
         for (auto j = 0; j < fN; j++)
         {
             h += fWeights[i * fN + j] * (fNeurons[j] ? 1 : -1);
         }
 
-        #pragma omp critical
+        #pragma omp atomic write
         fNeurons[i] = h > 0.;
     }
 }
