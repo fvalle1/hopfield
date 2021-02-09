@@ -67,6 +67,13 @@ On Apple devices be sure to run from the home folder (shaders are required to be
 
 More examples are in the [test](test/) folder.
 
+# With images
+
+Example with a corrupted image of an "8" hanwritten.
+![corrupted image](corrupted.png)
+
+![reconstructed image](reconstructed.png)
+
 # Issues
 The Github Action RunMacOS sometime fails due to lack of GPU access.
 
