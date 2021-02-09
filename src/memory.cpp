@@ -30,7 +30,7 @@ Memory::Memory(std::vector<int> data)
 {
     assert(data.size() == fSize);
     fData = new spin[fSize];
-    uint8_t i = 0;
+    int i = 0;
     std::for_each(data.begin(), data.end(), [this, &i](auto&& point) {
         this->fData[i++] = point > 0;
     });
