@@ -1,9 +1,7 @@
-![Compile](https://github.com/fvalle1/hopfield/workflows/Compile/badge.svg)
 ![Compile w/o Metal](https://github.com/fvalle1/hopfield/workflows/Compile%20w/o%20Metal/badge.svg)
 ![Build CMake Linux](https://github.com/fvalle1/hopfield/workflows/Build%20CMake/badge.svg?branch=main)
 ![Build CMake Macos](https://github.com/fvalle1/hopfield/workflows/Build%20CMake%20Macos/badge.svg)
 ![Run Linux](https://github.com/fvalle1/hopfield/workflows/Run%20Ubuntu/badge.svg)
-![Run MacOS](https://github.com/fvalle1/hopfield/workflows/Run/badge.svg)
 
 # hopfield
 hopfield network implementation in C++
